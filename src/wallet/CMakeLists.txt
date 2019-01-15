@@ -126,6 +126,11 @@ if (BUILD_GUI_DEPS)
             ringct_basic
             checkpoints
             version
+            epee
+            easylogging
+            lmdb
+            blockchain_db
+            unbound
             device_trezor)
 
     foreach(lib ${libs_to_merge})
