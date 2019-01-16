@@ -294,11 +294,6 @@ struct WalletListener
  */
 struct Wallet
 {
-    enum Device {
-        Device_Software = 0,
-        Device_Ledger = 1
-    };
-
     enum Status {
         Status_Ok,
         Status_Error,
@@ -428,13 +423,6 @@ struct Wallet
     */
     virtual void setRecoveringFromSeed(bool recoveringFromSeed) = 0;
 
-   /*!
-    * \brief setRecoveringFromDevice - set state to recovering from device
-    *
-    * \param recoveringFromDevice - true/false
-    */
-    virtual void setRecoveringFromDevice(bool recoveringFromDevice) = 0;
-
     /*!
      * \brief setSubaddressLookahead - set size of subaddress lookahead
      *
@@ -515,20 +503,8 @@ struct Wallet
     static std::string genPaymentId();
     static bool paymentIdValid(const std::string &paiment_id);
     static bool addressValid(const std::string &str, NetworkType nettype);
-    static bool addressValid(const std::string &str, bool testnet)          // deprecated
-    {
-        return addressValid(str, testnet ? TESTNET : MAINNET);
-    }
     static bool keyValid(const std::string &secret_key_string, const std::string &address_string, bool isViewKey, NetworkType nettype, std::string &error);
-    static bool keyValid(const std::string &secret_key_string, const std::string &address_string, bool isViewKey, bool testnet, std::string &error)     // deprecated
-    {
-        return keyValid(secret_key_string, address_string, isViewKey, testnet ? TESTNET : MAINNET, error);
-    }
     static std::string paymentIdFromAddress(const std::string &str, NetworkType nettype);
-    static std::string paymentIdFromAddress(const std::string &str, bool testnet)       // deprecated
-    {
-        return paymentIdFromAddress(str, testnet ? TESTNET : MAINNET);
-    }
     static uint64_t maximumAllowedAmount();
     // Easylogger wrapper
     static void init(const char *argv0, const char *default_log_base_name) { init(argv0, default_log_base_name, "", true); }
@@ -765,11 +741,6 @@ struct Wallet
     //! returns true if the keys file is locked
     virtual bool isKeysFileLocked() = 0;
 
-    /*!
-     * \brief Queries backing device for wallet keys
-     * \return Device they are on
-     */
-    virtual Device getDeviceType() const = 0;
 };
 
 /**
@@ -788,10 +759,6 @@ struct WalletManager
      * \return                Wallet instance (Wallet::status() needs to be called to check if created successfully)
      */
     virtual Wallet * createWallet(const std::string &path, const std::string &password, const std::string &language, NetworkType nettype, uint64_t kdf_rounds = 1) = 0;
-    Wallet * createWallet(const std::string &path, const std::string &password, const std::string &language, bool testnet = false)      // deprecated
-    {
-        return createWallet(path, password, language, testnet ? TESTNET : MAINNET);
-    }
 
     /*!
      * \brief  Opens existing wallet
@@ -802,10 +769,6 @@ struct WalletManager
      * \return                Wallet instance (Wallet::status() needs to be called to check if opened successfully)
      */
     virtual Wallet * openWallet(const std::string &path, const std::string &password, NetworkType nettype, uint64_t kdf_rounds = 1) = 0;
-    Wallet * openWallet(const std::string &path, const std::string &password, bool testnet = false)     // deprecated
-    {
-        return openWallet(path, password, testnet ? TESTNET : MAINNET);
-    }
 
     /*!
      * \brief  recovers existing wallet using mnemonic (electrum seed)
@@ -819,11 +782,6 @@ struct WalletManager
      */
     virtual Wallet * recoveryWallet(const std::string &path, const std::string &password, const std::string &mnemonic,
                                     NetworkType nettype = MAINNET, uint64_t restoreHeight = 0, uint64_t kdf_rounds = 1) = 0;
-    Wallet * recoveryWallet(const std::string &path, const std::string &password, const std::string &mnemonic,
-                                    bool testnet = false, uint64_t restoreHeight = 0)           // deprecated
-    {
-        return recoveryWallet(path, password, mnemonic, testnet ? TESTNET : MAINNET, restoreHeight);
-    }
 
     /*!
      * \deprecated this method creates a wallet WITHOUT a passphrase, use the alternate recoverWallet() method
@@ -835,10 +793,6 @@ struct WalletManager
      * \return                Wallet instance (Wallet::status() needs to be called to check if recovered successfully)
      */
     virtual Wallet * recoveryWallet(const std::string &path, const std::string &mnemonic, NetworkType nettype, uint64_t restoreHeight = 0) = 0;
-    Wallet * recoveryWallet(const std::string &path, const std::string &mnemonic, bool testnet = false, uint64_t restoreHeight = 0)         // deprecated
-    {
-        return recoveryWallet(path, mnemonic, testnet ? TESTNET : MAINNET, restoreHeight);
-    }
 
     /*!
      * \brief  recovers existing wallet using keys. Creates a view only wallet if spend key is omitted
@@ -862,17 +816,6 @@ struct WalletManager
                                                     const std::string &viewKeyString,
                                                     const std::string &spendKeyString = "",
                                                     uint64_t kdf_rounds = 1) = 0;
-    Wallet * createWalletFromKeys(const std::string &path,
-                                  const std::string &password,
-                                  const std::string &language,
-                                  bool testnet,
-                                  uint64_t restoreHeight,
-                                  const std::string &addressString,
-                                  const std::string &viewKeyString,
-                                  const std::string &spendKeyString = "")       // deprecated
-    {
-        return createWalletFromKeys(path, password, language, testnet ? TESTNET : MAINNET, restoreHeight, addressString, viewKeyString, spendKeyString);
-    }
 
    /*!
     * \deprecated this method creates a wallet WITHOUT a passphrase, use createWalletFromKeys(..., password, ...) instead
@@ -893,35 +836,6 @@ struct WalletManager
                                                     const std::string &addressString,
                                                     const std::string &viewKeyString,
                                                     const std::string &spendKeyString = "") = 0;
-    Wallet * createWalletFromKeys(const std::string &path, 
-                                  const std::string &language,
-                                  bool testnet, 
-                                  uint64_t restoreHeight,
-                                  const std::string &addressString,
-                                  const std::string &viewKeyString,
-                                  const std::string &spendKeyString = "")           // deprecated
-    {
-        return createWalletFromKeys(path, language, testnet ? TESTNET : MAINNET, restoreHeight, addressString, viewKeyString, spendKeyString);
-    }
-
-    /*!
-     * \brief  creates wallet using hardware device.
-     * \param  path                 Name of wallet file to be created
-     * \param  password             Password of wallet file
-     * \param  nettype              Network type
-     * \param  deviceName           Device name
-     * \param  restoreHeight        restore from start height (0 sets to current height)
-     * \param  subaddressLookahead  Size of subaddress lookahead (empty sets to some default low value)
-     * \param  kdf_rounds           Number of rounds for key derivation function
-     * \return                      Wallet instance (Wallet::status() needs to be called to check if recovered successfully)
-     */
-    virtual Wallet * createWalletFromDevice(const std::string &path,
-                                            const std::string &password,
-                                            NetworkType nettype,
-                                            const std::string &deviceName,
-                                            uint64_t restoreHeight = 0,
-                                            const std::string &subaddressLookahead = "",
-                                            uint64_t kdf_rounds = 1) = 0;
 
     /*!
      * \brief Closes wallet. In case operation succeeded, wallet object deleted. in case operation failed, wallet object not deleted
@@ -954,18 +868,6 @@ struct WalletManager
      * In this case, Wallet::unlockKeysFile() and Wallet::lockKeysFile() need to be called before and after the call to this function, respectively.
      */
     virtual bool verifyWalletPassword(const std::string &keys_file_name, const std::string &password, bool no_spend_key, uint64_t kdf_rounds = 1) const = 0;
-
-    /*!
-     * \brief determine the key storage for the specified wallet file
-     * \param device_type     (OUT) wallet backend as enumerated in Wallet::Device
-     * \param keys_file_name  Keys file to verify password for
-     * \param password        Password to verify
-     * \return                true if password correct, else false
-     *
-     * for verification only - determines key storage hardware
-     *
-     */
-    virtual bool queryWalletDevice(Wallet::Device& device_type, const std::string &keys_file_name, const std::string &password, uint64_t kdf_rounds = 1) const = 0;
 
     /*!
      * \brief findWallets - searches for the wallet files by given path name recursively
