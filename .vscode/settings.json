@@ -22,6 +22,10 @@
     "unordered_set": "cpp",
     "utility": "cpp",
     "hash_map": "cpp",
-    "hash_set": "cpp"
+    "hash_set": "cpp",
+    "chrono": "cpp",
+    "limits": "cpp",
+    "random": "cpp",
+    "__mutex_base": "cpp"
   }
 }
