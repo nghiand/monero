@@ -44,7 +44,6 @@ namespace Monero {
 class TransactionHistoryImpl;
 class PendingTransactionImpl;
 class UnsignedTransactionImpl;
-class AddressBookImpl;
 class SubaddressImpl;
 class SubaddressAccountImpl;
 struct Wallet2CallbackImpl;
@@ -159,7 +158,6 @@ public:
 
     virtual void disposeTransaction(PendingTransaction * t) override;
     virtual TransactionHistory * history() override;
-    virtual AddressBook * addressBook() override;
     virtual Subaddress * subaddress() override;
     virtual SubaddressAccount * subaddressAccount() override;
     virtual void setListener(WalletListener * l) override;
@@ -215,7 +213,6 @@ private:
     friend class UnsignedTransactionImpl;    
     friend class TransactionHistoryImpl;
     friend struct Wallet2CallbackImpl;
-    friend class AddressBookImpl;
     friend class SubaddressImpl;
     friend class SubaddressAccountImpl;
 
@@ -226,7 +223,6 @@ private:
     std::string m_password;
     std::unique_ptr<TransactionHistoryImpl> m_history;
     std::unique_ptr<Wallet2CallbackImpl> m_wallet2Callback;
-    std::unique_ptr<AddressBookImpl>  m_addressBook;
     std::unique_ptr<SubaddressImpl>  m_subaddress;
     std::unique_ptr<SubaddressAccountImpl>  m_subaddressAccount;
 
