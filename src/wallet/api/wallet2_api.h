@@ -784,19 +784,6 @@ struct Wallet
      */
     virtual void setDefaultMixin(uint32_t arg) = 0;
 
-    /*!
-     * \brief setUserNote - attach an arbitrary string note to a txid
-     * \param txid - the transaction id to attach the note to
-     * \param note - the note
-     * \return true if successful, false otherwise
-     */
-    virtual bool setUserNote(const std::string &txid, const std::string &note) = 0;
-    /*!
-     * \brief getUserNote - return an arbitrary string note attached to a txid
-     * \param txid - the transaction id to attach the note to
-     * \return the attached note, or empty string if there is none
-     */
-    virtual std::string getUserNote(const std::string &txid) const = 0;
     virtual std::string getTxKey(const std::string &txid) const = 0;
     virtual bool checkTxKey(const std::string &txid, std::string tx_key, const std::string &address, uint64_t &received, bool &in_pool, uint64_t &confirmations) = 0;
     virtual std::string getTxProof(const std::string &txid, const std::string &address, const std::string &message) const = 0;
