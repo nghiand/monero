@@ -38,8 +38,7 @@ set(wallet_api_sources
   pending_transaction.cpp
   utils.cpp
   subaddress.cpp
-  subaddress_account.cpp
-  unsigned_transaction.cpp)
+  subaddress_account.cpp)
 
 set(wallet_api_headers
     wallet2_api.h)
@@ -52,8 +51,7 @@ set(wallet_api_private_headers
   pending_transaction.h
   common_defines.h
   subaddress.h
-  subaddress_account.h
-  unsigned_transaction.h)
+  subaddress_account.h)
 
 monero_private_headers(wallet_api
   ${wallet_api_private_headers})

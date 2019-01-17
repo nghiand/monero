@@ -103,41 +103,6 @@ struct PendingTransaction
 };
 
 /**
- * @brief Transaction-like interface for sending money
- */
-struct UnsignedTransaction
-{
-    enum Status {
-        Status_Ok,
-        Status_Error,
-        Status_Critical
-    };
-
-    virtual ~UnsignedTransaction() = 0;
-    virtual int status() const = 0;
-    virtual std::string errorString() const = 0;
-    virtual std::vector<uint64_t> amount() const = 0;
-    virtual std::vector<uint64_t>  fee() const = 0;
-    virtual std::vector<uint64_t> mixin() const = 0;
-    // returns a string with information about all transactions.
-    virtual std::string confirmationMessage() const = 0;
-    virtual std::vector<std::string> paymentId() const = 0;
-    virtual std::vector<std::string> recipientAddress() const = 0;
-    virtual uint64_t minMixinCount() const = 0;
-    /*!
-     * \brief txCount - number of transactions current transaction will be splitted to
-     * \return
-     */
-    virtual uint64_t txCount() const = 0;
-   /*!
-    * @brief sign - Sign txs and saves to file
-    * @param signedFileName
-    * return - true on success
-    */
-    virtual bool sign(const std::string &signedFileName) = 0;
-};
-
-/**
  * @brief The TransactionInfo - interface for displaying transaction information
  */
 struct TransactionInfo
@@ -618,13 +583,6 @@ struct Wallet
      */
 
     virtual PendingTransaction * createSweepUnmixableTransaction() = 0;
-    
-   /*!
-    * \brief loadUnsignedTx  - creates transaction from unsigned tx file
-    * \return                - UnsignedTransaction object. caller is responsible to check UnsignedTransaction::status()
-    *                          after object returned
-    */
-    virtual UnsignedTransaction * loadUnsignedTx(const std::string &unsigned_filename) = 0;
     
    /*!
     * \brief submitTransaction - submits transaction in signed tx file

@@ -43,7 +43,6 @@
 namespace Monero {
 class TransactionHistoryImpl;
 class PendingTransactionImpl;
-class UnsignedTransactionImpl;
 class SubaddressImpl;
 class SubaddressAccountImpl;
 struct Wallet2CallbackImpl;
@@ -134,7 +133,6 @@ public:
                                         std::set<uint32_t> subaddr_indices = {}) override;
     virtual PendingTransaction * createSweepUnmixableTransaction() override;
     bool submitTransaction(const std::string &fileName) override;
-    virtual UnsignedTransaction * loadUnsignedTx(const std::string &unsigned_filename) override;
     bool exportKeyImages(const std::string &filename) override;
     bool importKeyImages(const std::string &filename) override;
 
@@ -191,7 +189,6 @@ private:
 
 private:
     friend class PendingTransactionImpl;
-    friend class UnsignedTransactionImpl;    
     friend class TransactionHistoryImpl;
     friend struct Wallet2CallbackImpl;
     friend class SubaddressImpl;

@@ -31,7 +31,6 @@
 
 #include "wallet.h"
 #include "pending_transaction.h"
-#include "unsigned_transaction.h"
 #include "transaction_history.h"
 #include "subaddress.h"
 #include "subaddress_account.h"
@@ -947,23 +946,6 @@ void WalletImpl::setAutoRefreshInterval(int millis)
 int WalletImpl::autoRefreshInterval() const
 {
     return m_refreshIntervalMillis;
-}
-
-UnsignedTransaction *WalletImpl::loadUnsignedTx(const std::string &unsigned_filename) {
-  clearStatus();
-  UnsignedTransactionImpl * transaction = new UnsignedTransactionImpl(*this);
-  if (!m_wallet->load_unsigned_tx(unsigned_filename, transaction->m_unsigned_tx_set)){
-    setStatusError(tr("Failed to load unsigned transactions"));
-  }
-  
-  // Check tx data and construct confirmation message
-  std::string extra_message;
-  if (!transaction->m_unsigned_tx_set.transfers.empty())
-    extra_message = (boost::format("%u outputs to import. ") % (unsigned)transaction->m_unsigned_tx_set.transfers.size()).str();
-  transaction->checkLoadedTx([&transaction](){return transaction->m_unsigned_tx_set.txes.size();}, [&transaction](size_t n)->const tools::wallet2::tx_construction_data&{return transaction->m_unsigned_tx_set.txes[n];}, extra_message);
-  setStatus(transaction->status(), transaction->errorString());
-    
-  return transaction;
 }
 
 bool WalletImpl::submitTransaction(const string &fileName) {
