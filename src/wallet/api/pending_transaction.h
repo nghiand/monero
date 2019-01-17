@@ -55,10 +55,6 @@ public:
     std::vector<std::set<uint32_t>> subaddrIndices() const override;
     // TODO: continue with interface;
 
-    std::string multisigSignData() override;
-    void signMultisigTx() override;
-    std::vector<std::string> signersKeys() const override;
-
 private:
     friend class WalletImpl;
     WalletImpl &m_wallet;
