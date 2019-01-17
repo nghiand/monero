@@ -294,11 +294,6 @@ struct WalletListener
  */
 struct Wallet
 {
-    enum Device {
-        Device_Software = 0,
-        Device_Ledger = 1
-    };
-
     enum Status {
         Status_Ok,
         Status_Error,
@@ -427,13 +422,6 @@ struct Wallet
     * \param recoveringFromSeed - true/false
     */
     virtual void setRecoveringFromSeed(bool recoveringFromSeed) = 0;
-
-   /*!
-    * \brief setRecoveringFromDevice - set state to recovering from device
-    *
-    * \param recoveringFromDevice - true/false
-    */
-    virtual void setRecoveringFromDevice(bool recoveringFromDevice) = 0;
 
     /*!
      * \brief setSubaddressLookahead - set size of subaddress lookahead
@@ -779,12 +767,6 @@ struct Wallet
     virtual bool unlockKeysFile() = 0;
     //! returns true if the keys file is locked
     virtual bool isKeysFileLocked() = 0;
-
-    /*!
-     * \brief Queries backing device for wallet keys
-     * \return Device they are on
-     */
-    virtual Device getDeviceType() const = 0;
 };
 
 /**
@@ -920,25 +902,6 @@ struct WalletManager
     }
 
     /*!
-     * \brief  creates wallet using hardware device.
-     * \param  path                 Name of wallet file to be created
-     * \param  password             Password of wallet file
-     * \param  nettype              Network type
-     * \param  deviceName           Device name
-     * \param  restoreHeight        restore from start height (0 sets to current height)
-     * \param  subaddressLookahead  Size of subaddress lookahead (empty sets to some default low value)
-     * \param  kdf_rounds           Number of rounds for key derivation function
-     * \return                      Wallet instance (Wallet::status() needs to be called to check if recovered successfully)
-     */
-    virtual Wallet * createWalletFromDevice(const std::string &path,
-                                            const std::string &password,
-                                            NetworkType nettype,
-                                            const std::string &deviceName,
-                                            uint64_t restoreHeight = 0,
-                                            const std::string &subaddressLookahead = "",
-                                            uint64_t kdf_rounds = 1) = 0;
-
-    /*!
      * \brief Closes wallet. In case operation succeeded, wallet object deleted. in case operation failed, wallet object not deleted
      * \param wallet        previously opened / created wallet instance
      * \return              None
@@ -969,18 +932,6 @@ struct WalletManager
      * In this case, Wallet::unlockKeysFile() and Wallet::lockKeysFile() need to be called before and after the call to this function, respectively.
      */
     virtual bool verifyWalletPassword(const std::string &keys_file_name, const std::string &password, bool no_spend_key, uint64_t kdf_rounds = 1) const = 0;
-
-    /*!
-     * \brief determine the key storage for the specified wallet file
-     * \param device_type     (OUT) wallet backend as enumerated in Wallet::Device
-     * \param keys_file_name  Keys file to verify password for
-     * \param password        Password to verify
-     * \return                true if password correct, else false
-     *
-     * for verification only - determines key storage hardware
-     *
-     */
-    virtual bool queryWalletDevice(Wallet::Device& device_type, const std::string &keys_file_name, const std::string &password, uint64_t kdf_rounds = 1) const = 0;
 
     /*!
      * \brief findWallets - searches for the wallet files by given path name recursively

@@ -114,27 +114,6 @@ Wallet *WalletManagerImpl::createWalletFromKeys(const std::string &path,
     return wallet;
 }
 
-Wallet *WalletManagerImpl::createWalletFromDevice(const std::string &path,
-                                                  const std::string &password,
-                                                  NetworkType nettype,
-                                                  const std::string &deviceName,
-                                                  uint64_t restoreHeight,
-                                                  const std::string &subaddressLookahead,
-                                                  uint64_t kdf_rounds)
-{
-    WalletImpl * wallet = new WalletImpl(nettype, kdf_rounds);
-    if(restoreHeight > 0){
-        wallet->setRefreshFromBlockHeight(restoreHeight);
-    }
-    auto lookahead = tools::parse_subaddress_lookahead(subaddressLookahead);
-    if (lookahead)
-    {
-        wallet->setSubaddressLookahead(lookahead->first, lookahead->second);
-    }
-    wallet->recoverFromDevice(path, password, deviceName);
-    return wallet;
-}
-
 bool WalletManagerImpl::closeWallet(Wallet *wallet, bool store)
 {
     WalletImpl * wallet_ = dynamic_cast<WalletImpl*>(wallet);
@@ -163,14 +142,6 @@ bool WalletManagerImpl::walletExists(const std::string &path)
 bool WalletManagerImpl::verifyWalletPassword(const std::string &keys_file_name, const std::string &password, bool no_spend_key, uint64_t kdf_rounds) const
 {
 	    return tools::wallet2::verify_password(keys_file_name, password, no_spend_key, hw::get_device("default"), kdf_rounds);
-}
-
-bool WalletManagerImpl::queryWalletDevice(Wallet::Device& device_type, const std::string &keys_file_name, const std::string &password, uint64_t kdf_rounds) const
-{
-    hw::device::device_type type;
-    bool r = tools::wallet2::query_device(type, keys_file_name, password, kdf_rounds);
-    device_type = static_cast<Wallet::Device>(type);
-    return r;
 }
 
 std::vector<std::string> WalletManagerImpl::findWallets(const std::string &path)
