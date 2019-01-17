@@ -33,7 +33,6 @@
 #include "pending_transaction.h"
 #include "unsigned_transaction.h"
 #include "transaction_history.h"
-#include "address_book.h"
 #include "subaddress.h"
 #include "subaddress_account.h"
 #include "common_defines.h"
@@ -388,7 +387,6 @@ WalletImpl::WalletImpl(NetworkType nettype, uint64_t kdf_rounds)
     m_wallet->callback(m_wallet2Callback.get());
     m_refreshThreadDone = false;
     m_refreshEnabled = false;
-    m_addressBook.reset(new AddressBookImpl(this));
     m_subaddress.reset(new SubaddressImpl(this));
     m_subaddressAccount.reset(new SubaddressAccountImpl(this));
 
@@ -1567,11 +1565,6 @@ void WalletImpl::disposeTransaction(PendingTransaction *t)
 TransactionHistory *WalletImpl::history()
 {
     return m_history.get();
-}
-
-AddressBook *WalletImpl::addressBook()
-{
-    return m_addressBook.get();
 }
 
 Subaddress *WalletImpl::subaddress()

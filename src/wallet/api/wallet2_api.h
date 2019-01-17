@@ -209,52 +209,6 @@ struct TransactionHistory
     virtual void refresh() = 0;
 };
 
-/**
- * @brief AddressBookRow - provides functions to manage address book
- */
-struct AddressBookRow {
-public:
-    AddressBookRow(std::size_t _rowId, const std::string &_address, const std::string &_paymentId, const std::string &_description):
-        m_rowId(_rowId),
-        m_address(_address),
-        m_paymentId(_paymentId), 
-        m_description(_description) {}
- 
-private:
-    std::size_t m_rowId;
-    std::string m_address;
-    std::string m_paymentId;
-    std::string m_description;
-public:
-    std::string extra;
-    std::string getAddress() const {return m_address;} 
-    std::string getDescription() const {return m_description;} 
-    std::string getPaymentId() const {return m_paymentId;} 
-    std::size_t getRowId() const {return m_rowId;}
-};
-
-/**
- * @brief The AddressBook - interface for 
-Book
- */
-struct AddressBook
-{
-    enum ErrorCode {
-        Status_Ok,
-        General_Error,
-        Invalid_Address,
-        Invalid_Payment_Id
-    };
-    virtual ~AddressBook() = 0;
-    virtual std::vector<AddressBookRow*> getAll() const = 0;
-    virtual bool addRow(const std::string &dst_addr , const std::string &payment_id, const std::string &description) = 0;  
-    virtual bool deleteRow(std::size_t rowId) = 0;
-    virtual void refresh() = 0;  
-    virtual std::string errorString() const = 0;
-    virtual int errorCode() const = 0;
-    virtual int lookupPaymentID(const std::string &payment_id) const = 0;
-};
-
 struct SubaddressRow {
 public:
     SubaddressRow(std::size_t _rowId, const std::string &_address, const std::string &_label):
@@ -805,7 +759,6 @@ struct Wallet
 
 
     virtual TransactionHistory * history() = 0;
-    virtual AddressBook * addressBook() = 0;
     virtual Subaddress * subaddress() = 0;
     virtual SubaddressAccount * subaddressAccount() = 0;
     virtual void setListener(WalletListener *) = 0;

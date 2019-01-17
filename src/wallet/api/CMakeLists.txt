@@ -37,7 +37,6 @@ set(wallet_api_sources
   transaction_history.cpp
   pending_transaction.cpp
   utils.cpp
-  address_book.cpp
   subaddress.cpp
   subaddress_account.cpp
   unsigned_transaction.cpp)
@@ -52,7 +51,6 @@ set(wallet_api_private_headers
   transaction_history.h
   pending_transaction.h
   common_defines.h
-  address_book.h
   subaddress.h
   subaddress_account.h
   unsigned_transaction.h)
