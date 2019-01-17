@@ -143,8 +143,6 @@ public:
     virtual void setListener(WalletListener * l) override;
     virtual uint32_t defaultMixin() const override;
     virtual void setDefaultMixin(uint32_t arg) override;
-    virtual bool setUserNote(const std::string &txid, const std::string &note) override;
-    virtual std::string getUserNote(const std::string &txid) const override;
     virtual std::string getTxKey(const std::string &txid) const override;
     virtual bool checkTxKey(const std::string &txid, std::string tx_key, const std::string &address, uint64_t &received, bool &in_pool, uint64_t &confirmations) override;
     virtual std::string getTxProof(const std::string &txid, const std::string &address, const std::string &message) const override;
